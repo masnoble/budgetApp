@@ -15,4 +15,4 @@ services:
     volumes:
       - ./db:/app
     ports:
-      - "3000:3000"
+      - "${HOST_ADDRESS}:3306"
