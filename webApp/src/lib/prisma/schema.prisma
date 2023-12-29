@@ -1,29 +1,94 @@
 // schema.prisma
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "mysql"
-  url = env("MYSQL_PRISMA_URL") // uses connection pooling
+  url      = env("MYSQL_PRISMA_URL") // uses connection pooling
 }
 
-model Post {
-  id        String     @default(cuid()) @id
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User?   @relation(fields: [authorId], references: [id])
-  authorId  String?
+enum CategoryType {
+  UNDEFINED
+  NEED
+  WANT
+  DEBT
 }
 
-model User {
-  id            String       @default(cuid()) @id
-  name          String?
-  email         String?   @unique
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
-  posts         Post[]
-  @@map(name: "users")
+enum MonthCode {
+  JAN
+  FEB
+  MAR
+  APR
+  MAY
+  JUN
+  JUL
+  AUG
+  SEP
+  OCT
+  NOV
+  DEC
+}
+
+model Person {
+  id       String   @id @default(cuid())
+  name     String
+  email    String   @unique
+  families Family[]
+}
+
+model Family {
+  id         String     @id @default(cuid())
+  people     Person[]
+  categories Category[]
+  methods    Method[]
+  months     Month[]
+}
+
+model Month {
+  id           String        @id @default(cuid())
+  monthCode    MonthCode
+  year         Int
+  family       Family        @relation(fields: [familyId], references: [id])
+  familyId     String
+  transactions Transaction[]
+
+  @@unique([monthCode, year])
+}
+
+model Category {
+  id           String        @id @default(cuid())
+  name         String
+  budget       Budget?
+  type         CategoryType  @default(UNDEFINED)
+  transactions Transaction[]
+  family       Family        @relation(fields: [familyId], references: [id])
+  familyId     String
+}
+
+model Budget {
+  id         String   @id @default(cuid())
+  budget     Float    @default(0.00)
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String   @unique
+}
+
+model Method {
+  id           String        @id @default(cuid())
+  name         String        @unique
+  transactions Transaction[]
+  family       Family        @relation(fields: [familyId], references: [id])
+  familyId     String
+}
+
+model Transaction {
+  id         String    @id @default(cuid())
+  amount     Float
+  date       DateTime?
+  method     Method    @relation(fields: [methodId], references: [id])
+  methodId   String
+  category   Category  @relation(fields: [categoryId], references: [id])
+  categoryId String
+  month      Month     @relation(fields: [monthId], references: [id])
+  monthId    String
 }
