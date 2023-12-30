@@ -46,12 +46,15 @@ model Family {
 }
 
 model Month {
-  id           String        @id @default(cuid())
-  monthCode    MonthCode
-  year         Int
-  family       Family        @relation(fields: [familyId], references: [id])
-  familyId     String
-  transactions Transaction[]
+  id              String        @id @default(cuid())
+  monthCode       MonthCode
+  year            Int
+  family          Family        @relation(fields: [familyId], references: [id])
+  familyId        String
+  transactions    Transaction[]
+  previousMonth   Month?        @relation("AdjacentMonths", fields: [previousMonthId], references: [id])
+  previousMonthId String?       @unique
+  nextMonth       Month?        @relation("AdjacentMonths")
 
   @@unique([monthCode, year])
 }
@@ -81,14 +84,23 @@ model Method {
   familyId     String
 }
 
+model Vendor {
+  id           String        @id @default(cuid())
+  name         String        @unique
+  transactions Transaction[]
+}
+
 model Transaction {
-  id         String    @id @default(cuid())
-  amount     Float
-  date       DateTime?
-  method     Method    @relation(fields: [methodId], references: [id])
-  methodId   String
-  category   Category  @relation(fields: [categoryId], references: [id])
-  categoryId String
-  month      Month     @relation(fields: [monthId], references: [id])
-  monthId    String
+  id          String    @id @default(cuid())
+  amount      Float
+  date        DateTime?
+  description String?
+  vendor      Vendor    @relation(fields: [vendorId], references: [id])
+  vendorId    String
+  method      Method    @relation(fields: [methodId], references: [id])
+  methodId    String
+  category    Category  @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  month       Month     @relation(fields: [monthId], references: [id])
+  monthId     String
 }
