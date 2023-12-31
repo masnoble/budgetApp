@@ -23,6 +23,7 @@
       "@ServerComponents/*": ["./src/lib/components/server/*"],
       "@ClientComponents/*": ["./src/lib/components/client/*"],
       "@types": ["./src/lib/types.ts"],
+      "@api/*": ["./src/lib/api/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
