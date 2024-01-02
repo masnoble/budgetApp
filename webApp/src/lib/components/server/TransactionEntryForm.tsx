@@ -2,7 +2,7 @@
 
 import { TransactionEntryOptions } from "@types";
 import { submitNewTransaction } from "@api/actions";
-import { Autocomplete, Button, Stack, TextField } from "@mui/material";
+import { Autocomplete, Button, InputBaseComponentProps, Stack, TextField } from "@mui/material";
 import { Category, Method, Vendor } from "@prisma/client";
 import { useState } from "react";
 
@@ -16,7 +16,7 @@ export default function TransactionEntryForm({
   const [category, setCategory] = useState<string>("");
   const [vendor, setVendor] = useState<string>("");
   const [method, setMethod] = useState<string>("");
-  const [person, setPerson] = useState<string>("");
+  const [amount, setAmount] = useState<string>("");
 
   return (
     <form
@@ -51,7 +51,7 @@ export default function TransactionEntryForm({
         setCategory("");
         setMethod("");
         setVendor("");
-        setPerson("");
+        setAmount("");
 
         setFormOptions(formOptions);
 
@@ -59,20 +59,18 @@ export default function TransactionEntryForm({
       }}
     >
       <Stack spacing={2} sx={{ width: 300 }}>
-        <Autocomplete
-          freeSolo
-          options={formOptions.people.map((v) => v.name)}
-          value={person}
-          onChange={(e, v) => setPerson(v!)}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Person"
-              type="text"
-              name="person"
-              onChange={(e) => setPerson(e.target.value)}
-            />
-          )}
+        <TextField 
+          label="Amount"
+          type="number"
+          name="amount"
+          required={true}
+          value={amount}
+          onChange={(e)=> {
+            // const val = parseFloat(e.target.value)
+            // if (isNaN(val)) return
+
+            setAmount(e.target.value)
+          }}
         />
         <Autocomplete
           freeSolo
