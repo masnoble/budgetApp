@@ -41,7 +41,7 @@ model Person {
 
 model Family {
   id         String     @id @default(cuid())
-  name       String     @default("Nameless fam")
+  name       String     @default("Nameless fam") @unique
   people     Person[]
   categories Category[]
   methods    Method[]

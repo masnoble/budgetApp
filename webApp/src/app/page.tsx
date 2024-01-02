@@ -1,4 +1,4 @@
-import { getPersonByEmail } from "@/lib/api/person";
+import { getPersonByEmail, initialSetup } from "@/lib/api/person";
 import TransactionEntryForm from "@/lib/components/server/TransactionEntryForm";
 import { TransactionEntryOptions } from "@/lib/types";
 import { Box, Grid, Stack } from "@mui/material";
@@ -6,6 +6,9 @@ import { MonthCode, Person } from "@prisma/client";
 
 export default async function Page() {
   // TODO: use some kind of google auth and store this email in session.
+
+  const ignore = await initialSetup("jnthomas522@gmail.com")
+
   const personAndFamily = await getPersonByEmail("jnthomas522@gmail.com");
   const person: Person = { 
     id: personAndFamily? personAndFamily.id : "",
