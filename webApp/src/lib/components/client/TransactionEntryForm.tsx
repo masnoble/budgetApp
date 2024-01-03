@@ -19,6 +19,7 @@ export default function TransactionEntryForm({
   const [amount, setAmount] = useState<string>("");
   const [description, setDescription] = useState<string>("");
 
+  console.log(formOptions)
   return (
     <form
       id="transactionEntryForm"
