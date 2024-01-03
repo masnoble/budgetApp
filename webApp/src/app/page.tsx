@@ -1,5 +1,5 @@
 import { getPersonByEmail, initialSetup } from "@/lib/api/person";
-import TransactionEntryForm from "@/lib/components/server/TransactionEntryForm";
+import TransactionEntryForm from "@ClientComponents/TransactionEntryForm";
 import { TransactionEntryOptions } from "@/lib/types";
 import { Box, Grid, Stack } from "@mui/material";
 import { MonthCode, Person } from "@prisma/client";

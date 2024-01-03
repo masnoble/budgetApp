@@ -65,6 +65,7 @@ export default function TransactionEntryForm({
           name="amount"
           required={true}
           value={amount}
+          autoComplete="off"
           onChange={(e)=> {
             // const val = parseFloat(e.target.value)
             // if (isNaN(val)) return
