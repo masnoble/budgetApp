@@ -11,11 +11,13 @@ export async function submitNewTransaction(
   const categoryName = formData.get("category") as string;
   const methodName = formData.get("method") as string;
   const amount = parseFloat(formData.get("amount") as string);
+  const description = formData.get("description") as string;
 
   const date = new Date(Date.now());
   const familyId = currentUser.familyId
 
   const newTransaction: Prisma.TransactionCreateInput = {
+    description: description,
     amount: amount,
     date: date,
     person: {

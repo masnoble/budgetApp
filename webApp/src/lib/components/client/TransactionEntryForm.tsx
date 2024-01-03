@@ -2,7 +2,7 @@
 
 import { TransactionEntryOptions } from "@types";
 import { submitNewTransaction } from "@api/actions";
-import { Autocomplete, Button, InputBaseComponentProps, Stack, TextField } from "@mui/material";
+import { Autocomplete, Button, Stack, TextField } from "@mui/material";
 import { Category, Method, Vendor } from "@prisma/client";
 import { useState } from "react";
 
@@ -17,6 +17,7 @@ export default function TransactionEntryForm({
   const [vendor, setVendor] = useState<string>("");
   const [method, setMethod] = useState<string>("");
   const [amount, setAmount] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
 
   return (
     <form
@@ -52,6 +53,7 @@ export default function TransactionEntryForm({
         setMethod("");
         setVendor("");
         setAmount("");
+        setDescription("");
 
         setFormOptions(formOptions);
 
@@ -59,19 +61,14 @@ export default function TransactionEntryForm({
       }}
     >
       <Stack spacing={2} sx={{ width: 300 }}>
-        <TextField 
+        <TextField
           label="Amount"
           type="number"
           name="amount"
           required={true}
           value={amount}
           autoComplete="off"
-          onChange={(e)=> {
-            // const val = parseFloat(e.target.value)
-            // if (isNaN(val)) return
-
-            setAmount(e.target.value)
-          }}
+          onChange={(e) => setAmount(e.target.value)}
         />
         <Autocomplete
           freeSolo
@@ -114,12 +111,18 @@ export default function TransactionEntryForm({
               label="Vendor"
               type="text"
               name="vendor"
-            //   value={params.inputProps.value}
+              //   value={params.inputProps.value}
               onChange={(e) => setVendor(e.target.value)}
             />
           )}
         />
-
+        <TextField
+          label="Descripion"
+          type="text"
+          name="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
         <Button type="submit">Submit</Button>
       </Stack>
     </form>
