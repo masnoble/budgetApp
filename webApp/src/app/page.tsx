@@ -1,18 +1,26 @@
 import { getPersonByEmail, initialSetup } from "@/lib/api/person";
 import TransactionEntryForm from "@ClientComponents/TransactionEntryForm";
 import { TransactionEntryOptions } from "@/lib/types";
-import { Box, Grid, Stack } from "@mui/material";
-import { MonthCode, Person } from "@prisma/client";
+import { Box, Grid} from "@mui/material";
+import { Person } from "@prisma/client";
 import { unstable_noStore } from "next/cache";
+import { authOptions } from "@api/authOptions";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
 export default async function Page() {
-  // TODO: use some kind of google auth and store this email in session.
-
   unstable_noStore();
+  // const ignore = await initialSetup("jnthomas522@gmail.com");
+  
+  const session = await getServerSession(authOptions)
+  const email = session?.user?.email
+  if(!email){
+    return redirect("api/auth/signin")
+  }
 
-  const ignore = await initialSetup("jnthomas522@gmail.com");
 
-  const personAndFamily = await getPersonByEmail("jnthomas522@gmail.com");
+
+  const personAndFamily = await getPersonByEmail(email);
   const person: Person = {
     id: personAndFamily ? personAndFamily.id : "",
     email: personAndFamily ? personAndFamily.email : "",

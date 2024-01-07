@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import NavBar from "@ClientComponents/NavBar";
 import { NavBarItem } from "@types";
+import NextAuthSessionProvider from "@ClientComponents/NextAuthSessionProvider";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -15,13 +16,13 @@ export const metadata: Metadata = {
 const navBarItems: NavBarItem[] = [
   {
     page: "budgets",
-    href: "/budgets"
-},
+    href: "/budgets",
+  },
   {
     page: "Submit Transaction",
-    href: "/transactions"
-  }
-]
+    href: "/transactions",
+  },
+];
 
 export default async function RootLayout({
   children,
@@ -30,9 +31,11 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className} >
-        <NavBar items={navBarItems}/>
-        <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
+      <body className={inter.className}>
+        <NextAuthSessionProvider>
+          <NavBar items={navBarItems} />
+          <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
+        </NextAuthSessionProvider>
       </body>
     </html>
   );
