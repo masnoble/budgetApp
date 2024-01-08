@@ -10,14 +10,12 @@ import { redirect } from "next/navigation";
 
 export default async function Page() {
   unstable_noStore();
-  // const ignore = await initialSetup("jnthomas522@gmail.com");
   
   const session = await getServerSession(authOptions)
   const email = session?.user?.email
   if(!email){
     return redirect("api/auth/signin")
   }
-
 
 
   const personAndFamily = await getPersonByEmail(email);

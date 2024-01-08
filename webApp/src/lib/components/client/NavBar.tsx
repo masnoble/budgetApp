@@ -10,9 +10,10 @@ import {
 import { NavBarItem } from "@types";
 import { useState } from "react";
 
-export default function NavBar({ items }: { items: NavBarItem[] }) {
+export default function NavBar({ items, userName }: { items: NavBarItem[], userName: string }) {
   const [drawerOpen, setDrawOpen] = useState<boolean>(false);
 
+  
   const makeItems = (sideDrawer?: boolean) => {
 
     return items.map((item) => (
@@ -59,7 +60,7 @@ export default function NavBar({ items }: { items: NavBarItem[] }) {
               textDecoration: "none",
             }}
           >
-            JOSHUA
+            {userName}
           </Typography>
           <Box sx={{ display: "flex", flexDirection: "column"}}>{makeItems(true)}</Box>
         </SwipeableDrawer>
@@ -83,7 +84,7 @@ export default function NavBar({ items }: { items: NavBarItem[] }) {
               textDecoration: "none",
             }}
           >
-            JOSHUA
+            {userName}
           </Typography>
           <Box sx={{ display: "flex" }}>{makeItems()}</Box>
         </Box>
