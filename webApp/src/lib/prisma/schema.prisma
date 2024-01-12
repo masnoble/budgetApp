@@ -35,7 +35,7 @@ model Person {
   id           String        @id @default(cuid())
   name         String
   email        String        @unique
-  family       Family        @relation(fields: [familyId], references: [id])
+  family       Family        @relation(fields: [familyId], references: [id], onDelete: Cascade)
   familyId     String
   transactions Transaction[]
 }
@@ -54,7 +54,7 @@ model Month {
   id              String        @id @default(cuid())
   monthCode       MonthCode
   year            Int
-  family          Family        @relation(fields: [familyId], references: [id])
+  family          Family        @relation(fields: [familyId], references: [id], onDelete: Cascade)
   familyId        String
   transactions    Transaction[]
   previousMonth   Month?        @relation("AdjacentMonths", fields: [previousMonthId], references: [id])
@@ -70,24 +70,25 @@ model Category {
   budget       Budget?
   type         CategoryType  @default(UNDEFINED)
   transactions Transaction[]
-  family       Family        @relation(fields: [familyId], references: [id])
+  family       Family        @relation(fields: [familyId], references: [id], onDelete: Cascade)
   familyId     String
 
   @@unique([name, familyId])
 }
 
 model Budget {
-  id         String   @id @default(cuid())
-  budget     Float    @default(0.00)
-  category   Category @relation(fields: [categoryId], references: [id])
-  categoryId String   @unique
+  id          String   @id @default(cuid())
+  budget      Float    @default(0.00)
+  hasRollover Boolean  @default(false)
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  String   @unique
 }
 
 model Method {
   id           String        @id @default(cuid())
   name         String
   transactions Transaction[]
-  family       Family        @relation(fields: [familyId], references: [id])
+  family       Family        @relation(fields: [familyId], references: [id], onDelete: Cascade)
   familyId     String
 
   @@unique([name, familyId])
@@ -97,7 +98,7 @@ model Vendor {
   id           String        @id @default(cuid())
   name         String
   transactions Transaction[]
-  family       Family        @relation(fields: [familyId], references: [id])
+  family       Family        @relation(fields: [familyId], references: [id], onDelete: Cascade)
   familyId     String
 
   @@unique([name, familyId])
@@ -107,17 +108,17 @@ model Transaction {
   id          String   @id @default(cuid())
   amount      Float
   date        DateTime
-  person      Person   @relation(fields: [personId], references: [id])
+  person      Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
   personId    String
   description String?
-  vendor      Vendor   @relation(fields: [vendorId], references: [id])
-  vendorId    String
-  method      Method   @relation(fields: [methodId], references: [id])
-  methodId    String
-  category    Category @relation(fields: [categoryId], references: [id])
-  categoryId  String
-  month       Month    @relation(fields: [monthId], references: [id])
-  monthId     String
+  vendor      Vendor?   @relation(fields: [vendorId], references: [id])
+  vendorId    String?
+  method      Method?   @relation(fields: [methodId], references: [id])
+  methodId    String?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  categoryId  String?
+  month       Month?    @relation(fields: [monthId], references: [id])
+  monthId     String?
 }
 
 model Session {
