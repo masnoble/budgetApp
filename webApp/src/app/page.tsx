@@ -2,7 +2,7 @@ import { getPersonByEmail, initialSetup } from "@/lib/api/person";
 import TransactionEntryForm from "@ClientComponents/TransactionEntryForm";
 import { TransactionEntryOptions } from "@/lib/types";
 import { Box, Grid} from "@mui/material";
-import { Person } from "@prisma/client";
+import { Person, Prisma } from "@prisma/client";
 import { unstable_noStore } from "next/cache";
 import { authOptions } from "@api/authOptions";
 import { getServerSession } from "next-auth";
@@ -17,8 +17,13 @@ export default async function Page() {
     return redirect("api/auth/signin")
   }
 
+  const familyFieldsToInclude: Prisma.FamilyInclude = {
+    vendors: true,
+    methods: true,
+    categories: true
+  }
 
-  const personAndFamily = await getPersonByEmail(email);
+  const personAndFamily = await getPersonByEmail(email, familyFieldsToInclude);
   const person: Person = {
     id: personAndFamily ? personAndFamily.id : "",
     email: personAndFamily ? personAndFamily.email : "",
@@ -27,7 +32,6 @@ export default async function Page() {
   };
 
   const family = personAndFamily!.family;
-  // const family = person!.family;
 
   const transactionEntryOptions: TransactionEntryOptions = {
     currentUser: person,

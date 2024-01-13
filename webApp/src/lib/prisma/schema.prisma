@@ -57,9 +57,6 @@ model Month {
   family          Family        @relation(fields: [familyId], references: [id], onDelete: Cascade)
   familyId        String
   transactions    Transaction[]
-  previousMonth   Month?        @relation("AdjacentMonths", fields: [previousMonthId], references: [id])
-  previousMonthId String?       @unique
-  nextMonth       Month?        @relation("AdjacentMonths")
 
   @@unique([monthCode, year, familyId])
 }

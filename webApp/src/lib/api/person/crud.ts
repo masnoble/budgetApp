@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma/prisma";
+import { Prisma } from "@prisma/client";
 
 export async function initialSetup(email: string) {
   return prisma.person.upsert({
@@ -32,17 +33,12 @@ export async function initialSetup(email: string) {
   });
 }
 
-export async function getPersonByEmail(email: string) {
+export async function getPersonByEmail(email: string, familyFieldsToInclude: Prisma.FamilyInclude) {
   return prisma.person.findFirst({
     where: { email },
     include: {
       family: {
-        include: {
-          people: true,
-          categories: true,
-          methods: true,
-          vendors: true,
-        },
+        include: familyFieldsToInclude
       },
     },
   });
