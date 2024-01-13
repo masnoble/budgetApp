@@ -2,6 +2,12 @@
 
 import { Family, MonthCode, Person, Prisma } from "@prisma/client";
 import { addTransaction } from "@api/transaction";
+import { findMonthBudgetReport } from "@api/category";
+
+
+export async function getMonthReportAction(familyId: string, monthId: string){
+  return await findMonthBudgetReport(familyId, monthId)
+}
 
 export async function submitNewTransaction(
   formData: FormData,

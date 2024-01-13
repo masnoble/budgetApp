@@ -1,11 +1,14 @@
-import { fillInMonths } from "@api/month";
+import { getMonth } from "@api/month";
 import MonthSelectBar from "@ServerComponents/MonthSelectBar";
 import { authOptions } from "@api/authOptions";
 import { getFamilyByPersonEmail } from "@api/family";
 import { Box } from "@mui/material";
-import { Prisma } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { findMonthBudgetReport } from "@api/category";
+import { MonthCode } from "@prisma/client";
+import BudgetView from "@/lib/components/client/BudgetView";
+
 
 export default async function Page() {
 
@@ -15,17 +18,9 @@ export default async function Page() {
     return redirect("api/auth/signin")
   }
 
-  // Just get months here and populate "month view" in child components
-  const familyFieldsToInclude: Prisma.FamilyInclude = {
-    months: true
-  }
-
-  let months = (await getFamilyByPersonEmail(email, familyFieldsToInclude))!.months
-
-  // Some backend initialization if there aren't many months in db
-  if (months.length < 12) { 
-    fillInMonths(12-months.length)
-  }
+  const family = (await getFamilyByPersonEmail(email))!
+  const currentMonth = await getMonth(family.id)
+  const initialDataToShow = await findMonthBudgetReport(family.id, currentMonth.id)
 
   return (
     <Box
@@ -33,8 +28,9 @@ export default async function Page() {
       flexGrow={1}
       alignItems="center"
       justifyContent="center"
+      flexDirection="column"
     >
-      <MonthSelectBar months={months}/>
+      <BudgetView initialData={initialDataToShow}/>
     </Box>
   );
 }

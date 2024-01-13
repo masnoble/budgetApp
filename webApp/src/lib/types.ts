@@ -1,4 +1,4 @@
-import { Category, Method, Person, Vendor } from "@prisma/client";
+import { Category, Method, Person, Prisma, Vendor } from "@prisma/client";
 
 export type NavBarItem = {
   page: string;
@@ -12,3 +12,7 @@ export type TransactionEntryOptions = {
   categories: Category[];
   methods: Method[];
 };
+
+export type BudgetData = Prisma.CategoryGetPayload<{
+  include: { budget: true; transactions: { select: { amount: true } } };
+}>[]
