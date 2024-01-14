@@ -11,21 +11,13 @@ export async function getMonth(
   const date = new Date(Date.now());
 
   //create it if it does not exist
-  const month =
-    (await prisma.month.findFirst({
-      where: {
-        familyId: familyId,
-        monthCode: monthCode ?? Object.values(MonthCode)[date.getMonth()],
-        year: year ?? date.getFullYear(),
-      },
-    })) ??
-    (await prisma.month.create({
-      data: {
-        familyId: familyId,
-        monthCode: monthCode ?? Object.values(MonthCode)[date.getMonth()],
-        year: year ?? date.getFullYear(),
-      },
-    }));
+  const month = await prisma.month.findFirst({
+    where: {
+      familyId: familyId,
+      monthCode: monthCode ?? Object.values(MonthCode)[date.getMonth()],
+      year: year ?? date.getFullYear(),
+    },
+  });
 
   return month;
 }

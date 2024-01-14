@@ -1,26 +1,42 @@
 "use client";
 
-import { BudgetData } from "@/lib/types";
-import { Box } from "@mui/material";
-import { Month, Prisma } from "@prisma/client";
-import { useState } from "react";
+import { BudgetData, MonthIdentifyer } from "@/lib/types";
+import { useEffect, useState } from "react";
+import BudgetItem from "./BudgetItem";
+import { MonthCode } from "@prisma/client";
+import { Box, Stack } from "@mui/material";
 
 export default function BudgetView({
   initialData,
 }: {
-  initialData: BudgetData;
+  initialData: BudgetData[];
 }) {
-  const [budgetData, setBudgetData] = useState<BudgetData>(initialData);
-  const [selectedMonth, setSelectedMonth] =
-    useState<
-      Prisma.MonthGetPayload<{ select: { monthCode: true; year: true } }>
-    >();
+  const [spendingWithBudget, setSpendingWithBudget] = useState<BudgetData[]>(
+    []
+  );
+  const [spendingWithoutBudget, setSpendingWithoutBudget] = useState<
+    BudgetData[]
+  >([]);
 
-  return(
-    <>
-    {budgetData.map(m => 
-        <Box key={m.id}>Total Spending for {m.name}:  {m.transactions.reduce((s, t) => s + t.amount, 0)}</Box>
-    )}
-    </>
-);
+  const date = new Date(Date.now());
+  const [selectedMonth, setSelectedMonth] = useState<MonthIdentifyer>({
+    monthCode: Object.values(MonthCode)[date.getMonth()],
+    year: date.getFullYear(),
+  });
+
+  useEffect(() => {
+    setSpendingWithBudget(initialData.filter((v) => v.budget !== null));
+    setSpendingWithoutBudget(initialData.filter((v) => v.budget === null));
+  }, []);
+
+  return (
+    <Stack spacing={2} sx={{ width: 300 }}>
+      {spendingWithBudget.map((m) => (
+        <BudgetItem key={m.id} budgetData={m} month={selectedMonth} />
+      ))}
+      {spendingWithoutBudget.map((m) => (
+        <BudgetItem key={m.id} budgetData={m} month={selectedMonth} />
+      ))}
+    </Stack>
+  );
 }

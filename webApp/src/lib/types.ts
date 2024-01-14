@@ -15,4 +15,8 @@ export type TransactionEntryOptions = {
 
 export type BudgetData = Prisma.CategoryGetPayload<{
   include: { budget: true; transactions: { select: { amount: true } } };
-}>[]
+}>;
+
+export type MonthIdentifyer = Prisma.MonthGetPayload<{
+  select: { monthCode: true; year: true };
+}>;
